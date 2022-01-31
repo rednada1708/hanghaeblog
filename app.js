@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const loginRouter = require("./routes/login")
 
-mongoose.connect("mongodb://localhost/shopping-demo", {
+
+
+mongoose.connect("mongodb://localhost/hanghae2", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -12,7 +15,13 @@ db.on("error", console.error.bind(console, "connection error:"));
 const app = express();
 const router = express.Router();
 
-app.use("/api", express.urlencoded({ extended: false }), router);
+
+
+
+
+
+
+app.use("/api", express.urlencoded({ extended: false }), [loginRouter]);
 app.use(express.static("assets"));
 
 
