@@ -1,0 +1,71 @@
+body {
+    background-color: rgba(0, 107, 255, 0.2);
+    min-height: 100vh;
+}
+
+.section {
+    padding: 1rem 1.5rem;
+    max-width: 90%;
+    margin: auto;
+}
+
+.title {
+    font-weight: 800;
+    font-size: 5rem;
+    font-family: 'Jua', sans-serif;
+}
+
+.subtitle {
+    font-size: 2rem;
+    font-family: 'Single Day', cursive;
+}
+
+.is-sparta {
+    color: #3734e8 !important;
+}
+
+.card{
+    margin-bottom: 30px;
+}
+.post-write{
+    max-width: 90%;
+    margin: auto;
+    padding: 20px ;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgba(0, 107, 255, 0.6);
+}
+
+.comment-write{
+    max-width: 90% ;
+    margin: auto;
+    padding: 20px;
+}
+
+.media-content{
+    background-color: white;
+    padding : 10px
+}
+
+.article{
+    margin-top: 0px;
+}
+
+.content{
+    background-color: white;
+    padding: 10px;
+}
+
+.detail-content{
+    font-size: 20px;
+}
+
+
+.register-form{
+    max-width: 60%;
+    margin: auto;
+    padding: 20px ;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgba(0, 107, 255, 0.6);
+}

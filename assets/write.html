@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Nodejs 1주차 과제</title>
+
+  <!-- Bulma CSS 링크 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/master.css" />
+  <script>
+    function posting() {
+      let title = $('#title').val()
+      let author = $('#author').val()
+      let password = $('#password').val()
+      let content = $('#content').val()
+      if( !(title.length && author.length && password.length && content.length) ){
+        return alert('빈값이 있습니다.')
+      }
+      $.ajax({
+        type: "POST",
+        url: "/api/articles",
+        data: {
+          "title": title,
+          "author": author,
+          "password": password,
+          "content": content
+        },
+        success: function (response) {
+          console.log(response['result'])
+          window.location.href = "/api/articles"
+        },
+      })
+    }
+    function to_main(){
+      window.location.href = "/api/articles"
+    }
+  </script>
+
+</head>
+
+<body>
+  <section onclick="window.location.href = '/main.html'" class="hero is-white">
+    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+      <h1 class="title is-sparta">항해블로그</h1>
+      <h3 class="subtitle is-sparta">나만의 항해일지</h3>
+    </div>
+  </section>
+
+  <section class="post-write">
+    <div class="field">
+      <label class="label">제목</label>
+      <div class="control">
+        <input class="input" type="text" placeholder="" id="title">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">작성자</label>
+      <div class="control">
+        <input class="input" type="text" placeholder="" id="author">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">비밀번호</label>
+      <div class="control">
+        <input class="input" type="text" placeholder="" id="password">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">내용</label>
+      <div class="control">
+        <textarea class="textarea" placeholder="" id="content"></textarea>
+      </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" onclick="posting()">작성하기</button>
+      </div>
+    </div>
+
+
+
+  </section>
+
+
+
+
+</body>
+
+</html>

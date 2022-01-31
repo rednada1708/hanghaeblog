@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Nodejs 1주차 과제</title>
+
+  <!-- Bulma CSS 링크 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/master.css" />
+  <script>
+    $(document).ready(function () {
+      listing()
+    })
+    function listing() {
+      $.ajax({
+        type: "GET",
+        url: `/api/articles`,
+        success: function (response) {
+          console.log(response)
+        },
+      });
+    }
+
+    function to_write(){
+      window.location.href = "/write"
+    }
+    function to_main(){
+      window.location.href = "/api/articles/"
+    }
+    function to_detail(number){
+      window.location.href = `/api/articles/${number}`
+    }
+
+  </script>
+  <style>
+    .card-content{
+      margin-bottom: 20px;
+      border: 5px solid rgb(120, 150, 240) ;
+    }
+  </style>
+</head>
+
+<body>
+  <section onclick="window.location.href = '/main.html'" class="hero is-white">
+    <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
+      <h1 class="title is-sparta">항해블로그</h1>
+      <h3 class="subtitle is-sparta">나만의 항해일지</h3>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" onclick="window.location.href = '/'">로그인</button>
+      </div>
+      <div class="control">
+        <button class="button is-link" onclick="window.location.href = '/write.html'">글쓰기</button>
+      </div>
+      <div class="control">
+        <button class="button is-link" onclick="to_write()">로그아웃</button>
+      </div>
+    </div>
+    <div class="card">
+        <div class="card-content" onclick="window.location.href = '/detail.html'">
+          <div class="media">
+            <div class="media-content">
+              <p class="title is-4">제목</p>
+              <p class="subtitle is-5">by 글쓴이</p>
+            </div>
+          </div>
+          <div class="content">
+            <time datetime="2016-1-1">날짜</time>
+          </div>
+        </div>
+
+    </div>
+
+
+  </div>
+    
+
+  </section>
+  
+
+
+</body>
+
+</html>
