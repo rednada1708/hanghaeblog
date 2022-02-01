@@ -41,7 +41,7 @@
 </head>
 
 <body>
-  <section onclick="window.location.href = '/main'" class="hero is-white">
+  <section onclick="window.location.href = '/api/articles'" class="hero is-white">
     <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
       <h1 class="title is-sparta">항해블로그</h1>
       <h3 class="subtitle is-sparta">나만의 항해일지</h3>
@@ -134,7 +134,7 @@
         },
         success: function (response) {
           localStorage.setItem("token", response.token);
-          window.location.replace("/main");
+          window.location.replace("/api/articles");
         },
         error: function (error) {
           alert(error.responseJSON.errorMessage)

@@ -34,6 +34,7 @@ app.get("/",(req,res)=>{
 })
 
 app.get("/main",(req,res)=>{
+  
   res.render("main",{})
 })
 

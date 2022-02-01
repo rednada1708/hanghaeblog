@@ -12,9 +12,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/master.css" />
+  <link rel="stylesheet" href="/assets/css/master.css" />
   <script>
+
+
+
     $(document).ready(function () {
+      if (localStorage.getItem("token")) {
+        $('#login-button').addClass("is-hidden")
+        $('#logout-button').removeClass("is-hidden")
+      } else {
+        $('#login-button').removeClass("is-hidden")
+        $('#logout-button').addClass("is-hidden")
+      }
       listing()
     })
     function listing() {
@@ -26,62 +36,153 @@
         },
       });
     }
+    // function to_detail(number) {
+    //   $.ajax({
+    //     type: "GET",
+    //     url: `/api/articles/${number}`,
+    //     headers: {
+    //       authorization: `Bearer ${localStorage.getItem("token")}`,
+    //     },
+    //     success: function (response) {
+    //       console.log(response['result'])
+    //       window.location.href = `/api/articles/${number}`
+    //     },
+    //   })
+    // }
 
 
-    function to_detail(number){
-      window.location.href = `/api/articles/${number}`
-    }
+
+
 
   </script>
   <style>
-    .card-content{
+    body {
+      background-color: rgba(0, 107, 255, 0.2);
+      min-height: 100vh;
+    }
+
+    .section {
+      padding: 1rem 1.5rem;
+      max-width: 90%;
+      margin: auto;
+    }
+
+    .title {
+      font-weight: 800;
+      font-size: 5rem;
+      font-family: 'Jua', sans-serif;
+    }
+
+    .subtitle {
+      font-size: 2rem;
+      font-family: 'Single Day', cursive;
+    }
+
+    .is-sparta {
+      color: #3734e8 !important;
+    }
+
+    .card {
+      margin-bottom: 30px;
+    }
+
+    .post-write {
+      max-width: 90%;
+      margin: auto;
+      padding: 20px;
+      border-style: solid;
+      border-radius: 10px;
+      border-color: rgba(0, 107, 255, 0.6);
+    }
+
+    .comment-write {
+      max-width: 90%;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .media-content {
+      background-color: white;
+      padding: 10px
+    }
+
+    .article {
+      margin-top: 0px;
+    }
+
+    .content {
+      background-color: white;
+      padding: 10px;
+    }
+
+    .detail-content {
+      font-size: 20px;
+    }
+
+
+    .register-form {
+      max-width: 60%;
+      margin: auto;
+      padding: 20px;
+      border-style: solid;
+      border-radius: 10px;
+      border-color: rgba(0, 107, 255, 0.6);
+    }
+
+    .card-content {
       margin-bottom: 20px;
-      border: 5px solid rgb(120, 150, 240) ;
+      border: 5px solid rgb(120, 150, 240);
     }
   </style>
 </head>
 
 <body>
-  <section onclick="window.location.href = '/main'" class="hero is-white">
+  <section onclick="window.location.href = '/api/articles'" class="hero is-white">
     <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
       <h1 class="title is-sparta">항해블로그</h1>
       <h3 class="subtitle is-sparta">나만의 항해일지</h3>
     </div>
   </section>
-  
+
   <section class="section">
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link" onclick="window.location.href = '/'">로그인</button>
+        <button id="login-button" class="button is-link" onclick="window.location.href = '/'">로그인</button>
       </div>
       <div class="control">
         <button class="button is-link" onclick="window.location.href = '/write'">글쓰기</button>
       </div>
       <div class="control">
-        <button class="button is-link" onclick="signOut()">로그아웃</button>
+        <button id="logout-button" class="button is-link is-hidden" onclick="signOut()">로그아웃</button>
       </div>
     </div>
     <div class="card">
-        <div class="card-content" onclick="window.location.href = '/detail'">
+      <% for (const article of articles){ %>
+        <div class="card-content" onclick="window.location.href = `/api/articles/<%= article.articleId %>`">
           <div class="media">
             <div class="media-content">
-              <p class="title is-4">제목</p>
-              <p class="subtitle is-5">by 글쓴이</p>
+              <p class="title is-4">
+                <%= article.title%>
+              </p>
+              <p class="subtitle is-5">by&nbsp<%= article.nickname%>
+              </p>
             </div>
           </div>
           <div class="content">
-            <time datetime="2016-1-1">날짜</time>
+            <time datetime="2016-1-1">
+              <%= new Date(article.date).toString().slice(0,24) %>
+            </time>
           </div>
         </div>
+        <% } %>
+    </div>
+
 
     </div>
 
 
-  </div>
-    
-
   </section>
-  
+
   <script>
     function signOut() {
       localStorage.clear();

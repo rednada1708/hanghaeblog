@@ -3,6 +3,8 @@ const router = express.Router()
 const Articles = require("../models/articles")
 const authMiddleware = require("../middlewares/auth-middleware")
 const User = require("../models/user")
+const jwt = require("jsonwebtoken")
+const { status } = require("express/lib/response")
 
 router.get("/", async(req,res)=>{
     res.send("This is root page")
@@ -11,15 +13,14 @@ router.get("/", async(req,res)=>{
 router.get("/articles", async(req,res)=>{
     const existArticles = await Articles.find()
     const articles = existArticles.sort((a,b)=>b.date-a.date)
-    console.log(articles)
     res.render("main",{articles:articles})
 })
 
 router.get("/articles/:articleId", async(req,res)=>{
     const {articleId} = req.params
-    console.log(articleId)
     const articles = await Articles.findOne({articleId:Number(articleId)})
-    res.render("detail",{articles})
+    //const status = (articles.nickname === )
+    res.render("detail",{articles,status:true})
 })
 
 router.get("/articles/:articleId/reform", async(req,res)=>{
