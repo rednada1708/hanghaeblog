@@ -1,7 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const Articles = require("../models/articles")
-
+const authMiddleware = require("../middlewares/auth-middleware")
+const User = require("../models/user")
 
 router.get("/", async(req,res)=>{
     res.send("This is root page")
@@ -32,19 +33,24 @@ router.get("/articles/:articleId/reform", async(req,res)=>{
 
 
 
-router.post("/articles",async(req,res)=>{
-    const {title, author, password, content} = req.body
-    if ( !(title && author && password && content)){
-        return res.json({success:false,errorMessage:"값을 모두 입력하지 않았습니다."})
-    }
+router.post("/articles", authMiddleware, async(req,res)=>{
+    const {user} = res.locals
+    const {title, content} = req.body
+
+    const nickname = user.nickname
+    const password = user.password
+
+    console.log(user, title,content)
     const date = new Date()
+    
     const articles = await Articles.find()
     const ids = articles.map((item)=>item.articleId)
     let articleId = 1
     if (ids.length !== 0){
         articleId = Math.max(...ids) + 1
-    } 
-    const createdArticle = await Articles.create({articleId,title,author,password,content,date})
+    }
+
+    const createdArticle = await Articles.create({articleId,title,nickname,password,content,date})
     res.json({ result : "작성완료" })
 })
 
