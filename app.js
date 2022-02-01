@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const loginRouter = require("./routes/login")
-
+const articleRouter = require("./routes/articles")
+const ejs = require("ejs")
 
 
 mongoose.connect("mongodb://localhost/hanghae2", {
@@ -15,20 +16,20 @@ db.on("error", console.error.bind(console, "connection error:"));
 const app = express();
 const router = express.Router();
 
+app.set('view engine', 'ejs')
+app.set('views', './views');
 
 
 
 
-
-
-app.use("/api", express.urlencoded({ extended: false }), [loginRouter]);
+app.use("/api", express.urlencoded({ extended: false }), [loginRouter, articleRouter]);
 app.use(express.static("assets"));
 
 
 
 
 app.get("/",(req,res)=>{
-    res.send("연결완료")
+    res.send()
 })
 
 

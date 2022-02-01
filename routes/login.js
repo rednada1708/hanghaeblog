@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const User = require("../models/user")
 const Joi = require("joi")
+const jwt = require("jsonwebtoken")
 
 
 router.get("/", (req,res)=>{
@@ -15,7 +16,7 @@ const postUsersSchema = Joi.object({
     confirmPassword:Joi.string().min(4).required()
 })
 
-
+// 회원가입 API 완성
 router.post("/users", async(req,res)=>{
     try{
         const {nickname, password,confirmPassword} = await postUsersSchema.validateAsync(req.body)
@@ -56,6 +57,28 @@ router.post("/users", async(req,res)=>{
 
    
 })
+
+// 로그인 API 작성
+
+router.post("/auth",async(req,res)=>{
+    
+    const {nickname,password} = req.body
+    console.log(nickname,password)
+
+    const user = await User.findOne({nickname,password})
+
+    if(!user){
+        res.status(400).send({
+            errorMessage: "nickname 또는 password가 일치하지 않습니다."
+        })
+        return
+    }
+    const token = jwt.sign({userId:user.userId},"my-secret-key")
+    res.send({token})
+
+})
+
+
 
 
 

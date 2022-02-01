@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>로그인 페이지</title>
+  <title>회원가입 페이지</title>
 
   <!-- Bulma CSS 링크 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
@@ -17,18 +17,35 @@
   <link rel="stylesheet" href="./css/master.css" />
   
   <script>
-    // $(document).ready(function () {
-    //   listing()
-    // })
-    // function listing() {
-    //   $.ajax({
-    //     type: "GET",
-    //     url: `/api/articles`,
-    //     success: function (response) {
-    //       console.log(response)
-    //     },
-    //   });
-    // }
+    $(document).ready(function () {
+      listing()
+    })
+    function listing() {
+      $.ajax({
+        type: "GET",
+        url: `/api/articles`,
+        success: function (response) {
+          console.log(response)
+        },
+      });
+    }
+
+    function to_write(){
+      window.location.href = "/write"
+    }
+    function to_main(){
+      window.location.href = "/api/articles/"
+    }
+    function to_detail(number){
+      window.location.href = `/api/articles/${number}`
+    }
+
+    
+
+
+
+
+
 
 
   </script>
@@ -59,10 +76,20 @@
           <i class="fas fa-check"></i>
         </span>
       </p>
+      <p>nickname은 최소 3자 이상, 알파벳 대소문자, 숫자만 가능</p>
     </div>
     <div class="field">
       <p class="control has-icons-left">
-        <input id="inputPassword" class="input" type="password" placeholder="password">
+        <input id="inputPassword1" class="input" type="password" placeholder="password">
+        <span class="icon is-small is-left">
+          <i class="fas fa-lock"></i>
+        </span>
+      </p>
+      <p>password는 최소 4자 이상, 닉네임과 같은값 포함하지 못합니다.</p>
+    </div>
+    <div class="field">
+      <p class="control has-icons-left">
+        <input id="inputPassword2" class="input" type="password" placeholder="cofirm password">
         <span class="icon is-small is-left">
           <i class="fas fa-lock"></i>
         </span>
@@ -70,78 +97,35 @@
     </div>
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link" onclick="sign_in()">로그인</button>
-      </div>
-      <div class="control">
-        <button class="button is-link" onclick="window.location.href = '/register.html'">회원가입</button>
+        <button class="button is-link" onclick="sign_up()">회원가입</button>
       </div>
     </div>
-
-    <div
-      class="modal text-left"
-      id="alertModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="alertModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="alertModalLabel">알림</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="alertText">
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-sparta"
-              data-dismiss="modal"
-            >
-              확인
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </section>
-  <script>
-    if (localStorage.getItem("token")) {
-      getSelf(function () {
-        alert("이미 로그인이 되어있습니다. 상품 페이지로 이동합니다.");
-        window.location.replace("/main.html");
-      });
-    }
 
-    function sign_in() {
-      let nickname = $("#inputNickname").val();
-      let password = $("#inputPassword").val();
+
+  <script>
+    function sign_up() {
+      const nickname = $("#inputNickname").val();
+      const password1 = $("#inputPassword1").val();
+      const password2 = $("#inputPassword2").val();
+
       $.ajax({
         type: "POST",
-        url: "/api/auth",
+        url: "/api/users",
         data: {
           nickname: nickname,
-          password: password,
+          password: password1,
+          confirmPassword: password2,
         },
         success: function (response) {
-          localStorage.setItem("token", response.token);
-          window.location.replace("/main.html");
+          alert("회원가입을 축하합니다.")
+          window.location.replace("/");
         },
         error: function (error) {
-          alert(error.responseJSON.errorMessage)
+          alert(error.responseJSON.errorMessage);
         },
       });
     }
-
   </script>
 
 
