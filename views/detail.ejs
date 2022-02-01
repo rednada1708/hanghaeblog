@@ -96,9 +96,10 @@
     </style>
 
     <script>
-
+        const articleId = <%= articles.articleId %>
+        consoele.log(articleId)
         function to_reform() {
-            window.location.href = "/reform"
+            window.location.href = `/api/articles/${articleId}/reform`
         }
 
 
@@ -151,7 +152,7 @@
         <div class="field is-grouped">
             <div class="control">
                 <button class="button is-link"
-                    onclick="window.location.href='/reform.html'">수정하기</button>
+                    onclick="to_reform()">수정하기</button>
             </div>
         </div>
 

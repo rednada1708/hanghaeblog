@@ -12,39 +12,118 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/master.css" />
+
+  <style>
+    body {
+      background-color: rgba(0, 107, 255, 0.2);
+      min-height: 100vh;
+    }
+
+    .section {
+      padding: 1rem 1.5rem;
+      max-width: 90%;
+      margin: auto;
+    }
+
+    .title {
+      font-weight: 800;
+      font-size: 5rem;
+      font-family: 'Jua', sans-serif;
+    }
+
+    .subtitle {
+      font-size: 2rem;
+      font-family: 'Single Day', cursive;
+    }
+
+    .is-sparta {
+      color: #3734e8 !important;
+    }
+
+    .card {
+      margin-bottom: 30px;
+    }
+
+    .post-write {
+      max-width: 90%;
+      margin: auto;
+      padding: 20px;
+      border-style: solid;
+      border-radius: 10px;
+      border-color: rgba(0, 107, 255, 0.6);
+    }
+
+    .comment-write {
+      max-width: 90%;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .media-content {
+      background-color: white;
+      padding: 10px
+    }
+
+    .article {
+      margin-top: 0px;
+    }
+
+    .content {
+      background-color: white;
+      padding: 10px;
+    }
+
+    .detail-content {
+      font-size: 20px;
+    }
+
+
+    .register-form {
+      max-width: 60%;
+      margin: auto;
+      padding: 20px;
+      border-style: solid;
+      border-radius: 10px;
+      border-color: rgba(0, 107, 255, 0.6);
+    }
+
+    .card-content {
+      margin-bottom: 20px;
+      border: 5px solid rgb(120, 150, 240);
+    }
+  </style>
+
   <script>
-    let articleId = 
-    console.log(articleId)
-    $(document).ready(function() {
-        $('#title').val(`<%= articles.title%>`);
-        $('#author').val(`<%= articles.author%>`);
-        $('#content').val(`<%= articles.content%>`);
+    let articleId = <%= articles.articleId%>
+      console.log(articleId)
+    $(document).ready(function () {
+      $('#title').val(`<%= articles.title%>`);
+      $('#nickname').val(`<%= articles.nickname%>`);
+      $('#content').val(`<%= articles.content%>`);
     });
+
     function to_main() {
       window.location.href = "/api/articles"
     }
 
     function reform() {
       let title = $('#title').val()
-      let author  = $('#author').val()
-      let password = $('#password').val()
       let content = $('#content').val()
-      if( !(title.length && author.length && password.length && content.length) ){
+      if (!(title.length && content.length)) {
         return alert('빈값이 있습니다.')
       }
-      console.log(title,content,author,password)
       $.ajax({
         type: "PUT",
         url: `/api/articles/${articleId}`,
-        data:{
-          "title": title,
-          "author": author,
-          "content": content,
-          "password": password
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        error: function (xhr, status, error) {
-          alert("비밀번호가 틀렸습니다.");
+        data: {
+          "title": title,
+          "content": content,
+        },
+        error: function (error) {
+          alert(error.responseJSON.errorMessage);
           window.location.href = `/api/articles/${articleId}/reform`;
         },
         success: function (response) {
@@ -54,19 +133,15 @@
       });
     }
 
-    function del_art(){
-      let password = $('#password').val()
-      if( !( password.length) ){
-        return alert('비밀번호를 입력하지 않았습니다.')
-      }
+    function del_art() {
       $.ajax({
         type: "DELETE",
         url: `/api/articles/${articleId}`,
-        data:{
-          "password": password
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        error: function (xhr, status, error) {
-          alert("비밀번호가 틀렸습니다.");
+        error: function (error) {
+          alert(error.responseJSON.errorMessage);
           window.location.href = `/api/articles/${articleId}/reform`;
         },
         success: function (response) {
@@ -74,22 +149,19 @@
           window.location.href = "/api/articles"
         },
       });
-
-
-
     }
 
 
 
 
-  
+
   </script>
 
 
 </head>
 
 <body>
-  <section onclick="window.location.href = '/main'" class="hero is-white">
+  <section onclick="window.location.href = '/api/articles'" class="hero is-white">
     <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
       <h1 class="title is-sparta">항해블로그</h1>
       <h3 class="subtitle is-sparta">나만의 항해일지</h3>
@@ -100,26 +172,14 @@
     <div class="field">
       <label class="label">제목</label>
       <div class="control">
-        <input class="input" type="text" placeholder="" id ="title">
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">작성자</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="" id ="author">
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">비밀번호</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="" id ="password">
+        <input class="input" type="text" placeholder="" id="title">
       </div>
     </div>
 
     <div class="field">
       <label class="label">내용</label>
       <div class="control">
-        <textarea class="textarea" placeholder="" id ="content"></textarea>
+        <textarea class="textarea" placeholder="" id="content"></textarea>
       </div>
     </div>
 
@@ -138,7 +198,40 @@
 
   </section>
 
+  <script>
+    //getSelf 함수 정의
+    function getSelf(callback) {
+      console.log('이 함수 작동?!')
+      $.ajax({
+        type: "GET",
+        url: "/api/users/me",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        success: function (response) {
+          callback(response.user);
+        },
+        error: function (xhr, status, error) {
+          if (status == 401) {
+            alert("로그인이 필요합니다.");
+          } else {
+            localStorage.clear();
+            alert("로그인을 해야 게시글을 작성할 수 있습니다.");
+          }
+          window.location.href = "/";
+        },
+      });
+    }
 
+    //getSelf 함수 실행
+    let user;
+
+    getSelf(function (u) {
+      user = u;
+    });
+
+
+  </script>
 
 
 </body>

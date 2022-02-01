@@ -56,25 +56,34 @@ router.post("/articles", authMiddleware, async(req,res)=>{
 })
 
 
-router.put("/articles/:articleId", async(req,res)=>{
+router.put("/articles/:articleId", authMiddleware, async(req,res)=>{
     console.log('수정 요청 받았습니다.')
+    const {nickname} = res.locals.user
     const {articleId} = req.params
-    const {title,content,author,password} = req.body
+    const {title,content} = req.body
     const [oldArticle] = await Articles.find({articleId:Number(articleId)})
-    if (password !== oldArticle.password ){
-        return res.status(400).json({succses:false, errorMessage:"비밀번호가 틀렸습니다."})
+    console.log(oldArticle.nickname)
+    if (nickname !== oldArticle.nickname ){
+        res.status(400).send({
+            errorMessage: "자기글만 수정할 수 있습니다."
+        })
+        return  
     }
     const date = new Date()
     await Articles.updateOne({articleId:Number(articleId)},{$set:{title,content,date}})
-    res.json({result:'수정완료'})
+    res.send({result:'수정완료'})
 })
 
-router.delete("/articles/:articleId", async(req,res)=>{
+router.delete("/articles/:articleId", authMiddleware, async(req,res)=>{
+    const {nickname} = res.locals.user
     const {articleId} = req.params
-    const {password} = req.body
     const [oldArticle] = await Articles.find({articleId:Number(articleId)})
-    if (password !== oldArticle.password ){
-        return res.status(400).json({succses:false, errorMessage:"비밀번호가 틀렸습니다."})
+    console.log(oldArticle.nickname)
+    if (nickname !== oldArticle.nickname ){
+        res.status(400).send({
+            errorMessage: "자기글만 삭제할 수 있습니다."
+        })
+        return  
     }
     await Articles.deleteOne({articleId})
     res.json({result:'삭제완료'})

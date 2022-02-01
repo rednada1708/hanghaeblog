@@ -114,11 +114,35 @@
     </div>
 
   </section>
-  <script>
+  <script> 
+    //getSelf 함수 정의
+    function getSelf(callback) {
+      console.log('이 함수 작동?!')
+      $.ajax({
+        type: "GET",
+        url: "/api/users/me",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        success: function (response) {
+          callback(response.user);
+        },
+        error: function (xhr, status, error) {
+          if (status == 401) {
+            alert("로그인이 필요합니다.");
+          } else {
+            localStorage.clear();
+            alert("로그인을 해야 게시글을 작성할 수 있습니다.");
+          }
+          window.location.href = "/";
+        },
+      });
+    }
+
     if (localStorage.getItem("token")) {
       getSelf(function () {
-        alert("이미 로그인이 되어있습니다. 상품 페이지로 이동합니다.");
-        window.location.replace("/main.html");
+        alert("이미 로그인이 되어있습니다.");
+        window.location.replace("/api/articles");
       });
     }
 
