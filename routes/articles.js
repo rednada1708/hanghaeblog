@@ -39,7 +39,6 @@ router.post("/articles",async(req,res)=>{
     }
     const date = new Date()
     const articles = await Articles.find()
-    console.log(articles)
     const ids = articles.map((item)=>item.articleId)
     let articleId = 1
     if (ids.length !== 0){

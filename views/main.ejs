@@ -27,12 +27,7 @@
       });
     }
 
-    function to_write(){
-      window.location.href = "/write"
-    }
-    function to_main(){
-      window.location.href = "/api/articles/"
-    }
+
     function to_detail(number){
       window.location.href = `/api/articles/${number}`
     }
@@ -47,7 +42,7 @@
 </head>
 
 <body>
-  <section onclick="window.location.href = '/main.html'" class="hero is-white">
+  <section onclick="window.location.href = '/main'" class="hero is-white">
     <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
       <h1 class="title is-sparta">항해블로그</h1>
       <h3 class="subtitle is-sparta">나만의 항해일지</h3>
@@ -60,14 +55,14 @@
         <button class="button is-link" onclick="window.location.href = '/'">로그인</button>
       </div>
       <div class="control">
-        <button class="button is-link" onclick="window.location.href = '/write.html'">글쓰기</button>
+        <button class="button is-link" onclick="window.location.href = '/write'">글쓰기</button>
       </div>
       <div class="control">
         <button class="button is-link" onclick="signOut()">로그아웃</button>
       </div>
     </div>
     <div class="card">
-        <div class="card-content" onclick="window.location.href = '/detail.html'">
+        <div class="card-content" onclick="window.location.href = '/detail'">
           <div class="media">
             <div class="media-content">
               <p class="title is-4">제목</p>

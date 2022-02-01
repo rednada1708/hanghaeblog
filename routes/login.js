@@ -3,13 +3,10 @@ const router = express.Router()
 const User = require("../models/user")
 const Joi = require("joi")
 const jwt = require("jsonwebtoken")
+const authMiddleware = require("../middlewares/auth-middleware")
 
 
-router.get("/", (req,res)=>{
-    console.log('로그인 라우터 입니다.')
-    res.send('작업완료')
-})
-
+// nickname, password 검증 스키마(joi 활용)
 const postUsersSchema = Joi.object({
     nickname: Joi.string().min(3).pattern(new RegExp('[a-zA-Z0-9]')).required(),
     password: Joi.string().min(4).required(),
@@ -63,7 +60,6 @@ router.post("/users", async(req,res)=>{
 router.post("/auth",async(req,res)=>{
     
     const {nickname,password} = req.body
-    console.log(nickname,password)
 
     const user = await User.findOne({nickname,password})
 
@@ -78,7 +74,17 @@ router.post("/auth",async(req,res)=>{
 
 })
 
+// 로그인 확인 API 작성
 
+router.get("/users/me", authMiddleware, async(req,res)=>{
+    console.log(res.locals.user.userId)
+    const {user} = res.locals
+    res.send({
+        user:{
+            userId:user.userId
+        }
+    })
+})
 
 
 
