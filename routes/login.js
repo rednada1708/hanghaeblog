@@ -86,6 +86,24 @@ router.get("/users/me", authMiddleware, async(req,res)=>{
     })
 })
 
+router.get("/users/find", async(req,res)=>{
+    const {authorization} = req.headers
+    const [tokenType,tokenValue] = authorization.split(' ')
+    try {
+        const {userId} = jwt.verify(tokenValue,"my-secret-key")
+        console.log(userId)
+        const user = await User.findById(userId)
+        res.send({
+            nickname: user.nickname
+        })
+
+    } catch (error) {
+        res.send({
+            errorMessage: '잘못된 접근입니다.'
+        })
+    }
+    
+})
 
 
 

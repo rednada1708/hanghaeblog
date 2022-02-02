@@ -20,7 +20,7 @@ router.get("/articles/:articleId", async(req,res)=>{
     const {articleId} = req.params
     const articles = await Articles.findOne({articleId:Number(articleId)})
     //const status = (articles.nickname === )
-    res.render("detail",{articles,status:true})
+    res.render("detail",{articles})
 })
 
 router.get("/articles/:articleId/reform", async(req,res)=>{

@@ -12,9 +12,32 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/master.css" />
-  <script>
 
+  <script>
+    function getUser() {
+      if (localStorage.getItem("token")) {
+        $.ajax({
+          type: "GET",
+          url: "/api/users/find",
+          async: false,
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          data: {
+          },
+          success: function (response) {
+            user = response['nickname']
+          }
+        })
+      } else {
+        user = "비회원"
+      }
+    }
+    
+    $(document).ready(function () {
+      getUser()
+      console.log(user)
+    })
 
 
     $(document).ready(function () {
@@ -25,17 +48,18 @@
         $('#login-button').removeClass("is-hidden")
         $('#logout-button').addClass("is-hidden")
       }
-      listing()
+      //listing()
     })
-    function listing() {
-      $.ajax({
-        type: "GET",
-        url: `/api/articles`,
-        success: function (response) {
-          console.log(response)
-        },
-      });
-    }
+    // function listing() {
+    //   $.ajax({
+    //     type: "GET",
+    //     url: `/api/articles`,
+    //     success: function (response) {
+    //       console.log(response)
+    //     },
+    //   });
+    // }
+
     // function to_detail(number) {
     //   $.ajax({
     //     type: "GET",
@@ -158,7 +182,7 @@
     </div>
     <div class="card">
       <% for (const article of articles){ %>
-        <div class="card-content" onclick="window.location.href = `/api/articles/<%= article.articleId %>`">
+        <div class="card-content" onclick="window.location.href = `/api/articles/<%= article.articleId %>`"> 
           <div class="media">
             <div class="media-content">
               <p class="title is-4">
