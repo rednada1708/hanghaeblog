@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const Articles = require("../models/articles")
 const Comment = require("../models/comment")
+const Like = require("../models/like")
 const authMiddleware = require("../middlewares/auth-middleware")
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
@@ -23,8 +24,17 @@ router.get("/articles/:articleId", async(req,res)=>{
     const articles = await Articles.findOne({articleId:Number(articleId)})
     //const status = (articles.nickname === )
     const existComment = await Comment.find({articleId})
+    const existLike = await Like.find({articleId})
+    const totalLike = existLike.length
+    const myLike = await Like.findOne({articleId,nickname:user})
+    let statusLike
+    if(myLike){
+        statusLike = true
+    } else{
+        statusLike = false
+    }
     const comments = existComment.sort((a,b)=>b.date-a.date)
-    res.render("detail",{articles,user,comments})
+    res.render("detail",{articles,user,comments,totalLike,statusLike})
 })
 
 router.get("/articles/:articleId/reform", async(req,res)=>{
@@ -78,6 +88,29 @@ router.post("/articles/:articleId/comment",authMiddleware,async(req,res)=>{
     await comment.save()
     res.send({result:"작성완료"})
 })
+
+// 좋아요 기능 구현
+
+router.post("/articles/:articleId/like",authMiddleware, async(req,res)=>{
+    const {nickname} = res.locals.user
+    const {articleId} = req.params
+    const {like} = req.body
+    console.log('좋아요 눌렸나?')
+    if(like==="false"){
+        await Like.deleteOne({nickname,articleId})
+        res.send({result:'좋아요 취소'})
+    } 
+    if(like==="true"){
+        const newLike = new Like({nickname,articleId})
+        await newLike.save()
+        res.send({result:'좋아요 완료'})
+    }
+    
+})
+
+
+
+
 
 
 

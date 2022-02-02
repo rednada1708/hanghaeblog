@@ -218,13 +218,52 @@
             }
         }
 
+        function toggleHeart(){
+            if($('#heart').hasClass("fas")){
+                $('#heart').removeClass("fas").addClass("far")
+            } else{
+                $('#heart').removeClass("far").addClass("fas")
+            }    
+        }
+        let like 
+        function add_like(){
+            if($('#heart').hasClass("fas")){
+                like = false
+            } else if($('#heart').hasClass("far")){
+                like = true
+            }
+            $.ajax({
+                type: "POST",
+                url: `/api/articles/${articleId}/like`,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                data: {
+                    "like": like
+                },
+                success: function (response) {
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+                error: function (xhr, status, error) {
+                    alert('로그인을 해야 좋아요를 할 수 있습니다.')
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+
+            })                
+        }
+
+
+
+
+
+
+
     </script>
 </head>
 
 
 
 <body>
-
     <section onclick="window.location.href = '/api/articles'" class="hero is-white">
         <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
             <h1 class="title is-sparta">항해블로그</h1>
@@ -248,9 +287,15 @@
                         <%= articles.content%>
                     </p>
                     <p>
-                        <span class="icon is-small is-sparta"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                        &nbsp
-                        <span class="is-sparta">likes : 300개</span>
+                        <div class="level-left">
+                            <a class="level-item is-sparta" aria-label="heart" onclick="add_like()">
+                                <%if (statusLike){ %>
+                                    <span class="icon is-small"><i class="fas fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
+                                <% } else { %>
+                                    <span class="icon is-small"><i class="far fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
+                                <% } %>
+                            </a> <span class="is-sparta like-num"><%= totalLike %> 개</span>
+                        </div>
                     </p>
                 </div>
             </div>
@@ -343,8 +388,8 @@
             <% } %>
         </div>
 
-
-
+        
+        
 
 
 
