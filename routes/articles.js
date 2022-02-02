@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Articles = require("../models/articles")
+const Comment = require("../models/comment")
 const authMiddleware = require("../middlewares/auth-middleware")
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
@@ -21,7 +22,9 @@ router.get("/articles/:articleId", async(req,res)=>{
     const {articleId} = req.params
     const articles = await Articles.findOne({articleId:Number(articleId)})
     //const status = (articles.nickname === )
-    res.render("detail",{articles,user})
+    const existComment = await Comment.find({articleId})
+    const comments = existComment.sort((a,b)=>b.date-a.date)
+    res.render("detail",{articles,user,comments})
 })
 
 router.get("/articles/:articleId/reform", async(req,res)=>{
@@ -30,8 +33,6 @@ router.get("/articles/:articleId/reform", async(req,res)=>{
     const articles = await Articles.findOne({articleId:Number(articleId)})
     res.render("reform",{articles})
 })
-
-
 
 
 
@@ -57,6 +58,29 @@ router.post("/articles", authMiddleware, async(req,res)=>{
 })
 
 
+//댓글작성 API 
+router.post("/articles/:articleId/comment",authMiddleware,async(req,res)=>{
+    const {content} =req.body
+    const {articleId} = req.params
+    const {nickname} = res.locals.user
+    console.log(content,articleId,nickname)
+    const date = new Date()
+
+    //comment Id 생성버튼
+    const existComment = await Comment.find()
+    const ids = existComment.map((item)=>item.commentId)
+    let commentId = 1
+    if (ids.length !== 0){
+        commentId = Math.max(...ids) + 1
+    }
+    //comment Id 생성버튼
+    const comment = new Comment({content,articleId,nickname,date,commentId})
+    await comment.save()
+    res.send({result:"작성완료"})
+})
+
+
+
 router.put("/articles/:articleId", authMiddleware, async(req,res)=>{
     console.log('수정 요청 받았습니다.')
     const {nickname} = res.locals.user
@@ -74,6 +98,34 @@ router.put("/articles/:articleId", authMiddleware, async(req,res)=>{
     await Articles.updateOne({articleId:Number(articleId)},{$set:{title,content,date}})
     res.send({result:'수정완료'})
 })
+
+
+router.put("/comment/:commentId", authMiddleware, async(req,res)=>{
+    const {nickname} = res.locals.user
+    const {commentId} = req.params
+    const {content} = req.body
+    const existComment = await Comment.findOne({commentId})
+    if(existComment.nickname===nickname){
+        await Comment.updateOne({commentId:Number(commentId)},{$set:{content}})
+    }
+    res.send({result:'수정완료'})
+})
+
+router.delete("/comment/:commentId", authMiddleware, async(req,res)=>{
+    const {nickname} = res.locals.user
+    const {commentId} = req.params
+    const existComment = await Comment.findOne({commentId})
+    if(existComment.nickname===nickname){
+        await Comment.deleteOne({commentId})
+    }
+    res.send({result:'삭제완료'})
+})
+
+
+
+
+
+
 
 router.delete("/articles/:articleId", authMiddleware, async(req,res)=>{
     const {nickname} = res.locals.user

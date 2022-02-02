@@ -95,9 +95,9 @@
     </style>
 
     <script>
-        let user 
+        let user = '<%= user%>'
         const articleId = '<%= articles.articleId %>'
-        
+
         function to_reform() {
             window.location.href = `/api/articles/${articleId}/reform`
         }
@@ -114,12 +114,117 @@
             $('#new-comment').val(old)
             console.log(old)
         }
+
+
+        function posting_click() {
+            $.ajax({
+                type: "GET",
+                url: "/api/users/me",
+                async: false,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                success: function (response) {
+                    callback(response.user);
+                },
+                error: function (xhr, status, error) {
+                    if (status == 401) {
+                        alert("로그인이 필요합니다.");
+                    } else {
+                        localStorage.clear();
+                        alert("로그인을 해야 게시글을 작성할 수 있습니다.");
+                    }
+                    window.location.href = "/";
+                },
+            });
+            $("#modal-post").addClass("is-active")
+        }
+
+
+        function posting() {
+            let content = $('#content').val()
+            if (!(content.length)) {
+                return alert('빈값이 있습니다.')
+            }
+            $.ajax({
+                type: "POST",
+                url: `/api/articles/${articleId}/comment`,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                data: {
+                    "content": content
+                },
+                success: function (response) {
+                    alert(response['result'])
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+            })
+        }
+
+        function saveComment(number) {
+            let content = $('#new-comment').val()
+            console.log(content)
+            if (!content) {
+                return alert('댓글내용이 비었습니다.')
+            }
+            $.ajax({
+                type: "PUT",
+                url: `/api/comment/${number}`,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                data: {
+                    "content": content
+                },
+                success: function (response) {
+                    alert(response['result'])
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+                error: function (xhr, status, error) {
+                    alert('잘못된 접근입니다.')
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+
+            })
+        }
+
+        function deleteComment(number) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/comment/${number}`,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                data: {
+                },
+                success: function (response) {
+                    alert(response['result'])
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+                error: function (xhr, status, error) {
+                    alert('잘못된 접근입니다.')
+                    window.location.href = `/api/articles/${articleId}?user=${user}`
+                },
+
+            })
+        }
+
+        function button_event(number) {
+            if (confirm("정말 삭제하시겠습니까??") == true) {    //확인
+                deleteComment(number)
+            } else {   //취소
+                return;
+            }
+        }
+
     </script>
 </head>
 
 
 
 <body>
+
     <section onclick="window.location.href = '/api/articles'" class="hero is-white">
         <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
             <h1 class="title is-sparta">항해블로그</h1>
@@ -152,14 +257,14 @@
         </article>
 
 
-        <% if(articles.nickname === user) {  %>
+        <% if(articles.nickname===user) { %>
             <div class="field is-grouped">
                 <div class="control">
                     <button class="button is-link" onclick="to_reform()">수정하기</button>
                 </div>
             </div>
         <% } %>
-       
+
 
 
 
@@ -172,7 +277,7 @@
 
     <!-- 댓글기능 -->
     <section class="comment-write">
-        <button class="button is-link" onclick='$("#modal-post").addClass("is-active")'>댓글작성</button>
+        <button class="button is-link" onclick='posting_click()'>댓글작성</button>
         <div class="modal" id="modal-post">
             <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
             <div class="modal-content">
@@ -181,7 +286,7 @@
                         <div class="media-content">
                             <div class="field">
                                 <p class="control">
-                                    <textarea id="textarea-post" class="textarea" placeholder="댓글을 남겨주세요."></textarea>
+                                    <textarea id="content" class="textarea" placeholder="댓글을 남겨주세요."></textarea>
                                 </p>
                             </div>
                             <nav class="level is-mobile">
@@ -190,7 +295,7 @@
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
-                                        <a class="button is-sparta" onclick="post()">포스팅하기</a>
+                                        <a class="button is-sparta" onclick="posting()">포스팅하기</a>
                                     </div>
                                     <div class="level-item">
                                         <a class="button is-sparta is-outlined"
@@ -207,26 +312,35 @@
         </div>
 
         <div>
-            <article class="media">
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>nickname</strong>
-                            <small>date</small>
-                            <a id="reform-icon" onclick="toggle()"><i class="fas fa-eraser"></i></a>
-                            <a id="delete-icon"><i class="fas fa-trash-alt"></i></a>
-                            <a id="save-icon" class="is-hidden"><i class="fas fa-save"></i></a>
-                            <a id="exit-icon" class="is-hidden" onclick="toggle()"><i
-                                    class="far fa-times-circle"></i></a>
-                            <br>
-                            <span id="old-comment">ssafdasfdasfasfdfasdf</span>
-                            <textarea id="new-comment" class="textarea is-hidden" placeholder="댓글을 입력해주세요."></textarea>
-                        </p>
+            <% for (const comment of comments) { %>
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>
+                                    <%= comment.nickname %>
+                                </strong>
+                                <small>
+                                    <%= new Date(comment.date).toLocaleString()%>
+                                </small>
+                                <% if (comment.nickname===user) { %>
+                                    <a id="reform-icon" onclick="toggle()"><i class="fas fa-eraser"></i></a>
+                                    <a id="delete-icon" onclick="button_event('<%= comment.commentId%>')"><i
+                                            class="fas fa-trash-alt"></i></a>
+                                    <a id="save-icon" class="is-hidden"
+                                        onclick="saveComment('<%= comment.commentId%>')"><i class="fas fa-save"></i></a>
+                                    <a id="exit-icon" class="is-hidden" onclick="toggle()"><i
+                                            class="far fa-times-circle"></i></a>
+                                <% } %>
+                                        <br>
+                                        <span id="old-comment"><%= comment.content %></span>
+                                        <textarea id="new-comment" class="textarea is-hidden" placeholder="댓글을 입력해주세요."></textarea>
+                            </p>
+                        </div>
+
                     </div>
-
-                </div>
-            </article>
-
+                </article>
+            <% } %>
         </div>
 
 
