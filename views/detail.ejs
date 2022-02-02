@@ -152,12 +152,14 @@
         </article>
 
 
-
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link" onclick="to_reform()">수정하기</button>
+        <% if(articles.nickname === user) {  %>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" onclick="to_reform()">수정하기</button>
+                </div>
             </div>
-        </div>
+        <% } %>
+       
 
 
 

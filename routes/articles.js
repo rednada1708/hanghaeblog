@@ -17,10 +17,11 @@ router.get("/articles", async(req,res)=>{
 })
 
 router.get("/articles/:articleId", async(req,res)=>{
+    const {user} = req.query
     const {articleId} = req.params
     const articles = await Articles.findOne({articleId:Number(articleId)})
     //const status = (articles.nickname === )
-    res.render("detail",{articles})
+    res.render("detail",{articles,user})
 })
 
 router.get("/articles/:articleId/reform", async(req,res)=>{

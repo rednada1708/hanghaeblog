@@ -14,6 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
 
   <script>
+    let user
     function getUser() {
       if (localStorage.getItem("token")) {
         $.ajax({
@@ -36,7 +37,6 @@
     
     $(document).ready(function () {
       getUser()
-      console.log(user)
     })
 
 
@@ -60,19 +60,15 @@
     //   });
     // }
 
-    // function to_detail(number) {
-    //   $.ajax({
-    //     type: "GET",
-    //     url: `/api/articles/${number}`,
-    //     headers: {
-    //       authorization: `Bearer ${localStorage.getItem("token")}`,
-    //     },
-    //     success: function (response) {
-    //       console.log(response['result'])
-    //       window.location.href = `/api/articles/${number}`
-    //     },
-    //   })
-    // }
+    function to_detail(number) {
+      $.ajax({
+        type: "GET",
+        url: `/api/articles/${number}?user=${user}`,
+        success: function (response) {
+          window.location.href = `/api/articles/${number}?user=${user}`
+        },
+      })
+    }
 
 
 
@@ -182,7 +178,7 @@
     </div>
     <div class="card">
       <% for (const article of articles){ %>
-        <div class="card-content" onclick="window.location.href = `/api/articles/<%= article.articleId %>`"> 
+        <div class="card-content" onclick="to_detail('<%= article.articleId %>')"> 
           <div class="media">
             <div class="media-content">
               <p class="title is-4">
