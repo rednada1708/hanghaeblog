@@ -64,11 +64,12 @@ router.post("/auth",async(req,res)=>{
     const user = await User.findOne({nickname,password})
 
     if(!user){
-        res.status(400).send({
+        res.status(401).send({
             errorMessage: "nickname 또는 password가 일치하지 않습니다."
         })
         return
     }
+
     const token = jwt.sign({userId:user.userId},"my-secret-key")
     res.send({token})
 
