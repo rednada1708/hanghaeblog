@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jua&family=Single+Day&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
   <link rel="stylesheet" href="./css/master.css" />
-  
+
   <script>
     // $(document).ready(function () {
     //   listing()
@@ -33,10 +33,11 @@
 
   </script>
   <style>
-    .card-content{
+    .card-content {
       margin-bottom: 20px;
-      border: 5px solid rgb(120, 150, 240) ;
+      border: 5px solid rgb(120, 150, 240);
     }
+
   </style>
 </head>
 
@@ -47,7 +48,7 @@
       <h3 class="subtitle is-sparta">나만의 항해일지</h3>
     </div>
   </section>
-  
+
   <section class="register-form">
     <div class="field">
       <p class="control has-icons-left has-icons-right">
@@ -77,35 +78,20 @@
       </div>
     </div>
 
-    <div
-      class="modal text-left"
-      id="alertModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="alertModalLabel"
-      aria-hidden="true"
-    >
+    <div class="modal text-left" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="alertModalLabel">알림</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body" id="alertText">
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-sparta"
-              data-dismiss="modal"
-            >
+            <button type="button" class="btn btn-outline-sparta" data-dismiss="modal">
               확인
             </button>
           </div>
@@ -114,7 +100,7 @@
     </div>
 
   </section>
-  <script> 
+  <script>
     //getSelf 함수 정의
     function getSelf(callback) {
       console.log('이 함수 작동?!')
@@ -131,15 +117,15 @@
     }
 
     if (localStorage.getItem("token")) {
-        alert("이미 로그인이 되어있습니다.");
-        window.location.replace("/api/articles");
+      alert("이미 로그인이 되어있습니다.");
+      window.location.replace("/api/articles");
     };
-    
+
 
     function sign_in() {
       let nickname = $("#inputNickname").val();
       let password = $("#inputPassword").val();
-      if((!nickname)||(!password)){
+      if ((!nickname) || (!password)) {
         alert("값을 입력하지 않았습니다.")
         return
       }
@@ -147,7 +133,7 @@
       $.ajax({
         type: "POST",
         url: "/api/auth",
-        async:false,
+        async: false,
         data: {
           nickname: nickname,
           password: password,
@@ -166,7 +152,7 @@
           //   alert("비밀번호가 일치하지 않습니다.")
           //   window.location.href = "/";
           // }
-          
+
         },
       });
     }
