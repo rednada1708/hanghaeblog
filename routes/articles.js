@@ -37,7 +37,7 @@ router.get("/articles/:articleId", async(req,res)=>{
     res.render("detail",{articles,user,comments,totalLike,statusLike})
 })
 
-router.get("/articles/:articleId/reform", authMiddleware, async(req,res)=>{
+router.get("/articles/:articleId/reform", async(req,res)=>{
     const {articleId} = req.params
     console.log(articleId)
     const articles = await Articles.findOne({articleId:Number(articleId)})
