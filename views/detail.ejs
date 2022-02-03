@@ -92,6 +92,7 @@
             margin-bottom: 20px;
             border: 5px solid rgb(120, 150, 240);
         }
+        
     </style>
 
     <script>
@@ -286,17 +287,16 @@
                         <br>
                         <%= articles.content%>
                     </p>
-                    <p>
-                        <div class="level-left">
-                            <a class="level-item is-sparta" aria-label="heart" onclick="add_like()">
-                                <%if (statusLike){ %>
-                                    <span class="icon is-small"><i class="fas fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
-                                <% } else { %>
-                                    <span class="icon is-small"><i class="far fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
-                                <% } %>
-                            </a> <span class="is-sparta like-num"><%= totalLike %> 개</span>
-                        </div>
-                    </p>
+
+                </div>
+                <div class="level-left">
+                    <a class="level-item is-sparta" aria-label="heart" onclick="add_like()">
+                        <%if (statusLike){ %>
+                            <span class="icon is-small"><i class="fas fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
+                        <% } else { %>
+                            <span class="icon is-small"><i class="far fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
+                        <% } %>
+                    </a> <span class="is-sparta like-num"><%= totalLike %> 개</span>    
                 </div>
             </div>
         </article>
