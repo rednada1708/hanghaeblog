@@ -92,6 +92,10 @@
             margin-bottom: 20px;
             border: 5px solid rgb(120, 150, 240);
         }
+        .trim{
+            display: block ;
+            float: left;
+        }
         
     </style>
 
@@ -290,7 +294,7 @@
 
                 </div>
                 <div class="level-left">
-                    <a class="level-item is-sparta" aria-label="heart" onclick="add_like()">
+                    <a class="level-item is-sparta trim" aria-label="heart" onclick="add_like()">
                         <%if (statusLike){ %>
                             <span class="icon is-small"><i class="fas fa-heart" id="heart" aria-hidden="true"></i></span>&nbsp;
                         <% } else { %>
